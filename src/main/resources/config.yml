@@ -72,3 +72,6 @@ smelting:
   STRIPPED_DARK_OAK_LOG:
     result: CHARCOAL
     xp: 15
+  WET_SPONGE:
+    result: SPONGE
+    xp: 20
