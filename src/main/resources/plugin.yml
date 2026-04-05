@@ -6,4 +6,9 @@ authors: [ Azisaba Network ]
 description: 相対的時空間かまど
 commands:
   fastfurnace:
-    description: 精錬処理を実行します。
+    description: 相対的時空間かまどを付与します
+    permission: fastfurnace.admin
+
+permissions:
+  fastfurnace.admin:
+    description: 相対的時空間かまどを付与する権限
