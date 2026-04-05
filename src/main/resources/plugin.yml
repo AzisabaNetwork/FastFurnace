@@ -1,0 +1,9 @@
+name: FastFurnace
+version: '${version}'
+main: net.azisaba.fastfurnace.FastFurnace
+api-version: '1.15'
+authors: [ Azisaba Network ]
+description: 相対的時空間かまど
+commands:
+  fastfurnace:
+    description: 精錬処理を実行します。

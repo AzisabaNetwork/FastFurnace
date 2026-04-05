@@ -1,0 +1,73 @@
+# かまどの判定に使う名前
+furnace-name: "§5相対的時空間§7かまど"
+
+furnace-lore:
+  - "§7大量に圧縮されたかまどの重力により発生する§bウラシマ効果§7と"
+  - "§dちょっとした技術§7を用いて精錬時間の短縮を実現したかまど。"
+  - "§aメインハンドに対象となるアイテムを持つことで"
+  - "§a燃料の供給、精錬ができる。"
+  - "§7mcmmoの経験値獲得、倍化適応"
+  - "§c原木は連続して燃料にされる可能性があるので、"
+  - "§c木炭が欲しい場合にはホットバーの原木より左側に一つ以上スペースを"
+  - "§a空けてください。"
+  - ""
+  - "§7燃料: §8石炭 木炭 石炭ブロック §6ブレイズロッド §cマグマバケツ"
+  - "§7精錬: §f鉄鉱石 §e金鉱石 §6原木"
+
+# 燃料として使えるアイテムと、追加される燃料の量
+fuels:
+  COAL: 8
+  CHARCOAL: 8
+  COAL_BLOCK: 80
+  LAVA_BUCKET: 100
+  BLAZE_ROD: 12
+
+# 精錬できるアイテムの設定
+# 書式:
+#   燃やすアイテム:
+#     result: 出来上がるアイテム
+#     xp: mcMMOの精錬スキルに入る経験値（1個あたり）
+# 精錬できるアイテムの設定
+smelting:
+  IRON_ORE:
+    result: IRON_INGOT
+    xp: 25
+  GOLD_ORE:
+    result: GOLD_INGOT
+    xp: 35
+  OAK_LOG:
+    result: CHARCOAL
+    xp: 15
+  SPRUCE_LOG:
+    result: CHARCOAL
+    xp: 15
+  BIRCH_LOG:
+    result: CHARCOAL
+    xp: 15
+  JUNGLE_LOG:
+    result: CHARCOAL
+    xp: 15
+  ACACIA_LOG:
+    result: CHARCOAL
+    xp: 15
+  DARK_OAK_LOG:
+    result: CHARCOAL
+    xp: 15
+  STRIPPED_OAK_LOG:
+    result: CHARCOAL
+    xp: 15
+  STRIPPED_SPRUCE_LOG:
+    result: CHARCOAL
+    xp: 15
+  STRIPPED_BIRCH_LOG:
+    result: CHARCOAL
+    xp: 15
+  STRIPPED_JUNGLE_LOG:
+    result: CHARCOAL
+    xp: 15
+  STRIPPED_ACACIA_LOG:
+    result: CHARCOAL
+    xp: 15
+  STRIPPED_DARK_OAK_LOG:
+    result: CHARCOAL
+    xp: 15
