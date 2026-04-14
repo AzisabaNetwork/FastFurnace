@@ -56,6 +56,11 @@ public class FurnaceListener implements Listener {
         if (mainHand.getType() == Material.AIR) return;
 
         StorageBox box = StorageBox.getStorageBox(mainHand);
+        Material targetMaterial = box != null ? box.getType() : mainHand.getType();
+
+        if (targetMaterial == null || targetMaterial == Material.AIR || (!config.getFuels().containsKey(targetMaterial) && !config.getRecipes().containsKey(targetMaterial))) {
+            return;
+        }
 
         if (box == null) {
             ItemMeta mainMeta = mainHand.getItemMeta();
