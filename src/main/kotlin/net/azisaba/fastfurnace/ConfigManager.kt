@@ -47,16 +47,25 @@ class ConfigManager(private val plugin: FastFurnace) {
             .mapNotNull { parseMaterial(it, "disabled-smelting") }
             .toSet()
 
-        recipes.clear()
+        val recipes = EnumMap<Material, SmeltRecipe>(Material::class.java)
         if (config.getBoolean("use-vanilla-recipes", true)) {
             val iterator = Bukkit.recipeIterator()
+            var failed = 0
             while (iterator.hasNext()) {
-                val recipe = iterator.next() as? FurnaceRecipe ?: continue
-                val result = recipe.result.type
-                if (result == Material.AIR) continue
-                for (input in inputMaterials(recipe)) {
-                    recipes.putIfAbsent(input, SmeltRecipe(result, recipe.experience, recipe.experience))
+                // 材料が空のレシピなどで例外が出ても、残りのレシピは読み込む
+                try {
+                    val recipe = iterator.next() as? FurnaceRecipe ?: continue
+                    val result = recipe.result.type
+                    if (result == Material.AIR) continue
+                    for (input in inputMaterials(recipe)) {
+                        recipes.putIfAbsent(input, SmeltRecipe(result, recipe.experience, recipe.experience))
+                    }
+                } catch (e: Exception) {
+                    failed++
                 }
+            }
+            if (failed > 0) {
+                plugin.logger.warning("読み込めなかったレシピが $failed 件あります。")
             }
         }
 
@@ -77,14 +86,17 @@ class ConfigManager(private val plugin: FastFurnace) {
         }
 
         disabled.forEach { recipes.remove(it) }
+
+        this.recipes.clear()
+        this.recipes.putAll(recipes)
+        plugin.logger.info("精錬レシピを ${recipes.size} 件読み込みました。")
     }
 
     private fun inputMaterials(recipe: FurnaceRecipe): Collection<Material> =
         when (val choice = recipe.inputChoice) {
             is RecipeChoice.MaterialChoice -> choice.choices
-            // NBT 付きの入力は名前・説明文付きアイテムを弾く仕様と合わないため対象外
-            is RecipeChoice.ExactChoice -> emptyList()
-            else -> listOf(recipe.input.type)
+            // ExactChoice (NBT 付きの入力) は名前・説明文付きアイテムを弾く仕様と合わないため対象外
+            else -> emptyList()
         }.filter { it != Material.AIR }
 
     private fun parseMaterial(name: String, path: String): Material? {

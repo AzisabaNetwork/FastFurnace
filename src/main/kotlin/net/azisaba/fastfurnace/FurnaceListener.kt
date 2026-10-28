@@ -47,6 +47,10 @@ class FurnaceListener(
         }
 
         if (!isFurnace) return
+        if (offMeta.lore != config.furnaceLore) {
+            offMeta.lore = config.furnaceLore
+            offHand.itemMeta = offMeta
+        }
         if (mainHand.type == Material.AIR) return
 
         val box = StorageBox.getStorageBox(mainHand)
