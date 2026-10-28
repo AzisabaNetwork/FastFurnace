@@ -4,6 +4,7 @@ main: net.azisaba.fastfurnace.FastFurnace
 api-version: '1.15'
 authors: [ Azisaba Network ]
 description: 相対的時空間かまど
+softdepend: [ StorageBox, mcMMO, ItemStash ]
 commands:
   fastfurnace:
     description: 相対的時空間かまどを付与します
