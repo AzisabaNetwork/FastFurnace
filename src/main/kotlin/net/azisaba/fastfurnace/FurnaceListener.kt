@@ -124,18 +124,35 @@ class FurnaceListener(
                 }
             }
             giveOrStoreItems(player, recipe.result, totalResultAmount)
-            if (recipe.xp > 0) {
-                val xpToAdd = (recipe.xp * processCount).toInt()
+            if (recipe.mcmmoXp > 0) {
+                val xpToAdd = recipe.mcmmoXp * processCount
                 try {
-                    ExperienceAPI.addRawXP(player, "Smelting", xpToAdd.toFloat(), "UNKNOWN")
+                    ExperienceAPI.addRawXP(player, "Smelting", xpToAdd, "UNKNOWN")
                 } catch (t: Throwable) {
-                    ExperienceAPI.addXP(player, "SMELTING", xpToAdd)
+                    ExperienceAPI.addXP(player, "SMELTING", xpToAdd.toInt())
                 }
+            }
+            if (config.giveVanillaExp) {
+                giveVanillaExp(player, recipe.vanillaXp * processCount)
             }
             player.sendMessage("${ChatColor.GREEN}相対的時空間かまどの残り燃料は${ChatColor.LIGHT_PURPLE}$currentFuel${ChatColor.GREEN} です")
             return
         }
         player.sendMessage("${ChatColor.RED}このアイテムは精錬できません。")
+    }
+
+    /**
+     * バニラのかまどと同様に、端数は確率で切り上げて経験値を付与する。
+     */
+    private fun giveVanillaExp(player: Player, exp: Float) {
+        if (exp <= 0) return
+        var amount = exp.toInt()
+        if (random.nextFloat() < exp - amount) {
+            amount++
+        }
+        if (amount > 0) {
+            player.giveExp(amount)
+        }
     }
 
     private fun hasStorageBoxFor(player: Player, material: Material): Boolean =

@@ -26,8 +26,8 @@ fuels:
 # サーバーに登録されている全てのかまどレシピを精錬対象にするか
 use-vanilla-recipes: true
 
-# smelting に記載のないアイテムを精錬した時の mcMMO 経験値（1個あたり）
-default-xp: 10
+# 精錬時にバニラの経験値（普通のかまどと同じ量）を付与するか
+give-vanilla-exp: false
 
 # 精錬対象から除外するアイテム
 disabled-smelting: []
@@ -36,7 +36,7 @@ disabled-smelting: []
 # 書式:
 #   燃やすアイテム:
 #     result: 出来上がるアイテム（省略時はかまどレシピの結果）
-#     xp: mcMMOの精錬スキルに入る経験値（1個あたり、省略時は default-xp）
+#     xp: mcMMOの精錬スキルに入る経験値（1個あたり、省略時はバニラのレシピの経験値）
 smelting:
   IRON_ORE:
     result: IRON_INGOT

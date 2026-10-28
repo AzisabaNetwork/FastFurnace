@@ -12,6 +12,8 @@ class ConfigManager(private val plugin: FastFurnace) {
         private set
     var furnaceLore: List<String> = emptyList()
         private set
+    var giveVanillaExp: Boolean = false
+        private set
     val fuels: MutableMap<Material, Int> = EnumMap(Material::class.java)
     val recipes: MutableMap<Material, SmeltRecipe> = EnumMap(Material::class.java)
 
@@ -20,6 +22,7 @@ class ConfigManager(private val plugin: FastFurnace) {
         val config = plugin.config
         furnaceName = config.getString("furnace-name", DEFAULT_FURNACE_NAME) ?: DEFAULT_FURNACE_NAME
         furnaceLore = config.getStringList("furnace-lore")
+        giveVanillaExp = config.getBoolean("give-vanilla-exp", false)
 
         fuels.clear()
         config.getConfigurationSection("fuels")?.let { section ->
@@ -36,10 +39,10 @@ class ConfigManager(private val plugin: FastFurnace) {
      * かまどレシピ一覧を作り直す。
      * use-vanilla-recipes が有効ならサーバーに登録されている全てのかまどレシピを取り込み、
      * その上で smelting セクションの設定で上書きする。
+     * mcMMO の経験値はバニラのレシピの値を使い、smelting で個別に上書きできる。
      */
     fun loadRecipes() {
         val config = plugin.config
-        val defaultXp = config.getInt("default-xp", 0)
         val disabled = config.getStringList("disabled-smelting")
             .mapNotNull { parseMaterial(it, "disabled-smelting") }
             .toSet()
@@ -52,7 +55,7 @@ class ConfigManager(private val plugin: FastFurnace) {
                 val result = recipe.result.type
                 if (result == Material.AIR) continue
                 for (input in inputMaterials(recipe)) {
-                    recipes.putIfAbsent(input, SmeltRecipe(result, defaultXp))
+                    recipes.putIfAbsent(input, SmeltRecipe(result, recipe.experience, recipe.experience))
                 }
             }
         }
@@ -60,14 +63,16 @@ class ConfigManager(private val plugin: FastFurnace) {
         config.getConfigurationSection("smelting")?.let { section ->
             for (key in section.getKeys(false)) {
                 val input = parseMaterial(key, "smelting") ?: continue
+                val base = recipes[input]
                 val resultName = section.getString("$key.result")
-                val result = resultName?.let { parseMaterial(it, "smelting.$key.result") }
-                    ?: recipes[input]?.result
+                val result = resultName?.let { parseMaterial(it, "smelting.$key.result") } ?: base?.result
                 if (result == null) {
                     plugin.logger.warning("smelting.$key の result が指定されていません。")
                     continue
                 }
-                recipes[input] = SmeltRecipe(result, section.getInt("$key.xp", defaultXp))
+                val vanillaXp = base?.vanillaXp ?: 0f
+                val mcmmoXp = if (section.contains("$key.xp")) section.getDouble("$key.xp").toFloat() else vanillaXp
+                recipes[input] = SmeltRecipe(result, mcmmoXp, vanillaXp)
             }
         }
 
